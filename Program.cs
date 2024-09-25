@@ -15,6 +15,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 var app = builder.Build();
 
+app.Urls.Add("http://0.0.0.0:80");
+
 app.MapGet("/images", (AppDbContext context) =>
 {
     var images = context.Images.ToList();
