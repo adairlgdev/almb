@@ -24,8 +24,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-app.Urls.Add("http://0.0.0.0:80");
-
 app.UseCors("AAllowSpecificOrigins");
 
 app.MapGet("/images", (AppDbContext context) =>
