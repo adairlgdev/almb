@@ -1,9 +1,7 @@
 using almb;
-using almb.Models;
 using almb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +11,22 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173", "https://minhalinda.vercel.app/")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+        });
+});
+
 var app = builder.Build();
 
 app.Urls.Add("http://0.0.0.0:80");
+
+app.UseCors("AAllowSpecificOrigins");
 
 app.MapGet("/images", (AppDbContext context) =>
 {
