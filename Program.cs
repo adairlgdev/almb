@@ -1,7 +1,9 @@
-using almb;
+using almb.Data;
+using almb.Services;
 using almb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,9 +24,33 @@ builder.Services.AddCors(options =>
         });
 });
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "API ALMB", Description = "Api álmbum de imagens", Version = "v1" });
+});
+
 var app = builder.Build();
 
-app.UseCors("AAllowSpecificOrigins");
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "APISaudacao v1");
+});
+
+//app.MapPost("/users", (AppDbContext context, [FromBody] CreateUserViewModel model) =>
+//{
+//    if (!model.IsValid)
+//    {
+//        return Results.BadRequest(model.Notifications);
+//    }
+
+//    var user = model.MapTo();
+//    user.EncryptPassword();
+//    context.Users.Add(user);
+//    context.SaveChanges();
+
+//    return Results.Created($"/users/{user.Id}", user.Id);
+//});
 
 app.MapGet("/images", (AppDbContext context) =>
 {
